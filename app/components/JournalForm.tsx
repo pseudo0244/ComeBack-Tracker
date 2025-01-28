@@ -1,18 +1,44 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { useRouter } from "next/navigation"
-import { saveJournalEntry, getTodayEntry, clearAllJournalEntries, deleteJournalEntry } from "@/utils/journalStorage"
-import { Trash2 } from "lucide-react"
-import { DeleteConfirmDialog } from "./DeleteConfirmDialog"
-import type { JournalEntry, HabitCategory } from "../types/journal"
+import { useState, useEffect, useCallback } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
+import {
+  saveJournalEntry,
+  getTodayEntry,
+  clearAllJournalEntries,
+  deleteJournalEntry,
+} from "@/utils/journalStorage";
+import { Trash2 } from "lucide-react";
+import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 
-const initialCategories: Record<string, HabitCategory> = {
+export interface HabitCategory {
+  name: string;
+  habits: { id: number; text: string; completed: boolean }[];
+}
+
+export type Categories = {
+  spiritual: HabitCategory;
+  mental: HabitCategory;
+  physical: HabitCategory;
+  emotional: HabitCategory;
+  economical: HabitCategory;
+  general: HabitCategory;
+};
+
+export interface JournalEntry {
+  date: string;
+  categories: Categories;
+  thankfulFor: string[];
+  proudOf: string[];
+  totalScore: number;
+}
+
+const initialCategories: Categories = {
   spiritual: {
     name: "Spiritual",
     habits: [
@@ -55,86 +81,88 @@ const initialCategories: Record<string, HabitCategory> = {
       { id: 12, text: "", completed: false },
     ],
   },
-}
+};
 
 export function JournalForm() {
-  const router = useRouter()
-  const [categories, setCategories] = useState(initialCategories)
-  const [thankfulFor, setThankfulFor] = useState<string[]>(["", ""])
-  const [proudOf, setProudOf] = useState<string[]>(["", ""])
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false)
+  const router = useRouter();
+  const [categories, setCategories] = useState<Categories>(initialCategories);
+  const [thankfulFor, setThankfulFor] = useState<string[]>(["", ""]);
+  const [proudOf, setProudOf] = useState<string[]>(["", ""]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
 
   useEffect(() => {
-    const todayEntry = getTodayEntry()
+    const todayEntry = getTodayEntry();
     if (todayEntry) {
-      setCategories(todayEntry.categories)
-      setThankfulFor(todayEntry.thankfulFor)
-      setProudOf(todayEntry.proudOf)
+      setCategories(todayEntry.categories);
+      setThankfulFor(todayEntry.thankfulFor);
+      setProudOf(todayEntry.proudOf);
     }
-  }, [])
+  }, []);
 
   const calculateCategoryScore = (category: HabitCategory) => {
-    return category.habits.filter((habit) => habit.completed).length
-  }
+    return category.habits.filter((habit) => habit.completed).length;
+  };
 
-  const calculateTotalScore = () => {
+  const calculateTotalScore = useCallback(() => {
     return Object.values(categories).reduce((total, category) => {
-      return total + calculateCategoryScore(category)
-    }, 0)
-  }
+      return total + calculateCategoryScore(category);
+    }, 0);
+  }, [categories]);
 
-  const toggleHabit = (categoryKey: keyof typeof categories, habitId: number) => {
+  const toggleHabit = (categoryKey: keyof Categories, habitId: number) => {
     setCategories((prev) => ({
       ...prev,
       [categoryKey]: {
         ...prev[categoryKey],
         habits: prev[categoryKey].habits.map((habit) =>
-          habit.id === habitId ? { ...habit, completed: !habit.completed } : habit,
+          habit.id === habitId ? { ...habit, completed: !habit.completed } : habit
         ),
       },
-    }))
-  }
+    }));
+  };
 
-  const updateHabitText = (categoryKey: keyof typeof categories, habitId: number, text: string) => {
+  const updateHabitText = (categoryKey: keyof Categories, habitId: number, text: string) => {
     setCategories((prev) => ({
       ...prev,
       [categoryKey]: {
         ...prev[categoryKey],
-        habits: prev[categoryKey].habits.map((habit) => (habit.id === habitId ? { ...habit, text } : habit)),
+        habits: prev[categoryKey].habits.map((habit) =>
+          habit.id === habitId ? { ...habit, text } : habit
+        ),
       },
-    }))
-  }
+    }));
+  };
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     const entry: JournalEntry = {
       date: new Date().toISOString().split("T")[0],
       categories,
       thankfulFor,
       proudOf,
       totalScore: calculateTotalScore(),
-    }
-    saveJournalEntry(entry)
-    router.push("/")
-  }
+    };
+    saveJournalEntry(entry);
+    router.push("/");
+  }, [categories, thankfulFor, proudOf, calculateTotalScore, router]);
 
   const handleDeleteEntry = () => {
-    const today = new Date().toISOString().split("T")[0]
-    deleteJournalEntry(today)
-    router.push("/")
-  }
+    const today = new Date().toISOString().split("T")[0];
+    deleteJournalEntry(today);
+    router.push("/");
+  };
 
   const handleDeleteAllEntries = () => {
-    clearAllJournalEntries()
-    router.push("/")
-  }
+    clearAllJournalEntries();
+    router.push("/");
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <Button variant="destructive" onClick={() => setShowDeleteDialog(true)}>
           <Trash2 className="w-4 h-4 mr-2" />
-          Delete Today's Entry
+          Delete Today&apos;s Entry
         </Button>
         <Button variant="destructive" onClick={() => setShowDeleteAllDialog(true)}>
           <Trash2 className="w-4 h-4 mr-2" />
@@ -156,18 +184,22 @@ export function JournalForm() {
                       <Checkbox
                         id={`habit-${habit.id}`}
                         checked={habit.completed}
-                        onCheckedChange={() => toggleHabit(key as keyof typeof categories, habit.id)}
+                        onCheckedChange={() => toggleHabit(key as keyof Categories, habit.id)}
                       />
                       <Input
                         value={habit.text}
-                        onChange={(e) => updateHabitText(key as keyof typeof categories, habit.id, e.target.value)}
+                        onChange={(e) =>
+                          updateHabitText(key as keyof Categories, habit.id, e.target.value)
+                        }
                         placeholder={`Enter ${category.name.toLowerCase()} habit`}
                         className="flex-grow"
                       />
                     </div>
                   ))}
                 </div>
-                <p className="text-sm text-gray-600">Score: {calculateCategoryScore(category)}/2</p>
+                <p className="text-sm text-gray-600">
+                  Score: {calculateCategoryScore(category)}/2
+                </p>
               </div>
             ))}
           </div>
@@ -181,15 +213,15 @@ export function JournalForm() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="font-semibold">Today I'm thankful for:</h3>
+              <h3 className="font-semibold">Today I&apos;m thankful for:</h3>
               {thankfulFor.map((item, index) => (
                 <Textarea
                   key={index}
                   value={item}
                   onChange={(e) => {
-                    const newThankful = [...thankfulFor]
-                    newThankful[index] = e.target.value
-                    setThankfulFor(newThankful)
+                    const newThankful = [...thankfulFor];
+                    newThankful[index] = e.target.value;
+                    setThankfulFor(newThankful);
                   }}
                   placeholder={`Thankful item ${index + 1}`}
                   className="h-20"
@@ -197,15 +229,15 @@ export function JournalForm() {
               ))}
             </div>
             <div className="space-y-4">
-              <h3 className="font-semibold">Today I'm proud of:</h3>
+              <h3 className="font-semibold">Today I&apos;m proud of:</h3>
               {proudOf.map((item, index) => (
                 <Textarea
                   key={index}
                   value={item}
                   onChange={(e) => {
-                    const newProud = [...proudOf]
-                    newProud[index] = e.target.value
-                    setProudOf(newProud)
+                    const newProud = [...proudOf];
+                    newProud[index] = e.target.value;
+                    setProudOf(newProud);
                   }}
                   placeholder={`Proud item ${index + 1}`}
                   className="h-20"
@@ -219,7 +251,9 @@ export function JournalForm() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex justify-between items-center">
-            <p className="text-lg font-semibold">Total score for today: {calculateTotalScore()}/12</p>
+            <p className="text-lg font-semibold">
+              Total score for today: {calculateTotalScore()}/12
+            </p>
             <div className="space-x-4">
               <Button variant="outline" onClick={() => router.push("/")}>
                 Cancel
@@ -234,18 +268,17 @@ export function JournalForm() {
         isOpen={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
         onConfirm={handleDeleteEntry}
-        title="Delete Today's Entry"
-        description="Are you sure you want to delete today's journal entry? This action cannot be undone."
+        title="Delete Today&apos;s Entry"
+        description="Are you sure you want to delete today&apos;s journal entry? This action cannot be undone."
       />
 
       <DeleteConfirmDialog
         isOpen={showDeleteAllDialog}
         onClose={() => setShowDeleteAllDialog(false)}
         onConfirm={handleDeleteAllEntries}
-        title="Delete All Journal Entries"
+        title="Delete All Entries"
         description="Are you sure you want to delete all journal entries? This action cannot be undone."
       />
     </div>
-  )
+  );
 }
-

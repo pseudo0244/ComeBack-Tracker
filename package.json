@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "predeploy": "npm run dev",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.5",
@@ -24,6 +26,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.7",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
