@@ -13,7 +13,13 @@ export default function Home() {
             <a href="/journal">Journal</a>
           </Button>
         </div>
-        <p className="text-center text-gray-600 text-xl mt-4">Built by Harshith J ❤️</p>
+        <p className="text-gray-600 text-xl mt-4">
+          Built by{" "}
+          <a href="https://www.hopp.bio/harshithj" className="text-blue-500 hover:underline">
+            Harshith J
+          </a>{" "}
+          ❤️
+        </p>
         <ContributionManager />
       </div>
     </main>
