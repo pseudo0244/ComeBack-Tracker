@@ -1,6 +1,7 @@
 # Habit Tracker
 
 This is a habit tracker website designed to help you build and maintain your habits effortlessly.
+![Homepage](https://github.com/pseudo0244/ComeBack-Tracker/blob/main/Screenshots/img2.png)
 
 ## 🌐 Live Website
 [Visit 2025mehogacomeback.vercel.app](https://2025mehogacomeback.vercel.app) to create and track your habits!
@@ -16,8 +17,8 @@ This is a habit tracker website designed to help you build and maintain your hab
 - **Local Storage** – Stores data in your browser for seamless tracking.
 
 ## 🖼️ Screenshots
-![Homepage](https://via.placeholder.com/800x400?text=Homepage)
-![Habit Tracking Grid](https://via.placeholder.com/800x400?text=Habit+Tracking+Grid)
+![Habit Tracking Grid](https://github.com/pseudo0244/ComeBack-Tracker/blob/main/Screenshots/img1.PNG)
+![Habit Tracking Grid](https://github.com/pseudo0244/ComeBack-Tracker/blob/main/Screenshots/img3.png)
 
 ## 📢 Contribute
 This project is open for contributions! Feel free to submit issues and pull requests.
