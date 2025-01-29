@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Habit Tracker
 
-## Getting Started
+This is a habit tracker website designed to help you build and maintain your habits effortlessly.
 
-First, run the development server:
+## 🌐 Live Website
+[Visit 2025mehogacomeback.vercel.app](https://2025mehogacomeback.vercel.app) to create and track your habits!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📌 Features
+- Track your daily habits with a GitHub-style contribution graph.
+- Customize each habit with different colors.
+- Data is stored locally in your browser (browser-dependent persistence).
+- Simple and intuitive UI.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Built With
+- **Next.js** – A React framework for building fast web applications.
+- **Local Storage** – Stores data in your browser for seamless tracking.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🖼️ Screenshots
+![Homepage](https://via.placeholder.com/800x400?text=Homepage)
+![Habit Tracking Grid](https://via.placeholder.com/800x400?text=Habit+Tracking+Grid)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📢 Contribute
+This project is open for contributions! Feel free to submit issues and pull requests.
 
-## Learn More
+## 📜 License
+This project is licensed under the MIT License.
 
-To learn more about Next.js, take a look at the following resources:
+Happy Tracking! ✅
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
